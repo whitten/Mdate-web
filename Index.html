@@ -1,1 +1,1253 @@
-<html></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MUMPS REST API Tester</title>
+    <style> 
+      /* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Container */
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Header */
+.header {
+    background: #252526;
+    padding: 8px 15px;
+    border-bottom: 1px solid #3c3c3c;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header h1 {
+    font-size: 18px;
+    color: #569cd6;
+    margin: 0;
+}
+
+.server-config {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.server-config label {
+    font-size: 14px;
+    color: #cccccc;
+}
+
+.server-config input {
+    padding: 8px 12px;
+    background: #3c3c3c;
+    border: 1px solid #555;
+    color: #d4d4d4;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 300px;
+}
+
+/* Main Content */
+.main-content {
+    display: grid;
+    grid-template-columns: 200px 0.8fr 1.5fr;
+    gap: 0;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Sidebar - Endpoints */
+.sidebar {
+    background: #252526;
+    border-right: 1px solid #3c3c3c;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.sidebar h2 {
+    font-size: 13px;
+    margin-bottom: 10px;
+    color: #569cd6;
+}
+
+.endpoint-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.endpoint-item {
+    padding: 6px 8px;
+    background: #2d2d30;
+    border: 1px solid #3c3c3c;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.endpoint-item:hover {
+    background: #37373d;
+    border-color: #569cd6;
+}
+
+.endpoint-item.active {
+    background: #094771;
+    border-color: #569cd6;
+}
+
+.method {
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    min-width: 45px;
+    text-align: center;
+}
+
+.method.get {
+    background: #4ec9b0;
+    color: #000;
+}
+
+.method.post {
+    background: #dcdcaa;
+    color: #000;
+}
+
+.method.put {
+    background: #ce9178;
+    color: #000;
+}
+
+.method.delete {
+    background: #f48771;
+    color: #000;
+}
+
+.path {
+    font-size: 13px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    color: #d4d4d4;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Request Panel */
+.request-panel {
+    background: #1e1e1e;
+    border-right: 1px solid #3c3c3c;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel-header {
+    padding: 8px 15px;
+    border-bottom: 1px solid #3c3c3c;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #252526;
+}
+
+.panel-header h2 {
+    font-size: 14px;
+    color: #569cd6;
+}
+
+.request-form {
+    padding: 12px 15px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.form-group {
+    margin-bottom: 12px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #cccccc;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 6px 8px;
+    background: #3c3c3c;
+    border: 1px solid #555;
+    color: #d4d4d4;
+    border-radius: 3px;
+    font-size: 12px;
+    font-family: 'Consolas', 'Courier New', monospace;
+}
+
+.form-group textarea {
+    resize: vertical;
+    font-size: 12px;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #569cd6;
+}
+
+.headers-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.header-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 8px;
+    align-items: center;
+}
+
+.header-row input {
+    padding: 8px;
+}
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px 8px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.btn-icon:hover {
+    opacity: 1;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: #0e639c;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: #1177bb;
+}
+
+.btn-secondary {
+    background: #3c3c3c;
+    color: #d4d4d4;
+    border: 1px solid #555;
+}
+
+.btn-secondary:hover {
+    background: #505050;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+/* Response Panel */
+.response-panel {
+    background: #1e1e1e;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.response-tabs {
+    display: flex;
+    gap: 5px;
+}
+
+.tab-btn {
+    padding: 8px 16px;
+    background: transparent;
+    border: none;
+    color: #cccccc;
+    cursor: pointer;
+    font-size: 13px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.tab-btn:hover {
+    color: #fff;
+}
+
+.tab-btn.active {
+    color: #fff;
+    border-bottom-color: #569cd6;
+}
+
+.response-info {
+    padding: 8px 15px;
+    background: #252526;
+    border-bottom: 1px solid #3c3c3c;
+    display: flex;
+    gap: 15px;
+    font-size: 12px;
+}
+
+.status-code {
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 3px;
+    background: #3c3c3c;
+}
+
+.status-code.success {
+    background: #4ec9b0;
+    color: #000;
+}
+
+.status-code.error {
+    background: #f48771;
+    color: #000;
+}
+
+.response-time,
+.response-size {
+    color: #cccccc;
+}
+
+.response-content {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+}
+
+.tab-content {
+    display: none;
+    height: 100%;
+    overflow: auto;
+    padding: 15px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content pre {
+    margin: 0;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #d4d4d4;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.response-actions {
+    padding: 8px 15px;
+    border-top: 1px solid #3c3c3c;
+    background: #252526;
+    display: flex;
+    gap: 8px;
+}
+
+/* History Panel */
+.history-panel {
+    background: #252526;
+    border-top: 1px solid #3c3c3c;
+    padding: 8px 15px;
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.history-panel .panel-header {
+    background: transparent;
+    padding: 0 0 6px 0;
+    border: none;
+}
+
+.history-panel h3 {
+    font-size: 12px;
+    color: #569cd6;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.history-item {
+    padding: 6px 8px;
+    background: #2d2d30;
+    border: 1px solid #3c3c3c;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-item:hover {
+    background: #37373d;
+    border-color: #569cd6;
+}
+
+.history-item-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.history-item-time {
+    font-size: 11px;
+    color: #858585;
+}
+
+.history-item-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.empty-state {
+    text-align: center;
+    color: #858585;
+    padding: 20px;
+    font-size: 13px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #3c3c3c;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .main-content {
+        grid-template-columns: 250px 1fr;
+    }
+    
+    .response-panel {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .sidebar,
+    .request-panel,
+    .response-panel {
+        border: none;
+        border-bottom: 1px solid #3c3c3c;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🔬 MUMPS REST API Tester</h1>
+            <div class="server-config">
+                <label for="baseUrl">Server URL:</label>
+                <input type="text" id="baseUrl" placeholder="http://ehr1.opensourcevista.net:9085" value="http://ehr1.opensourcevista.net:9085">
+                <button id="testConnection" class="btn btn-secondary">Test Connection</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Panel - Endpoints -->
+            <aside class="sidebar">
+                <h2>📋 Endpoints</h2>
+                <div class="endpoint-list">
+                    <div class="endpoint-item" data-method="GET" data-path="r/{routine}">
+                        <span class="method get">GET</span>
+                        <span class="path">r/{routine}</span>
+                    </div>
+                    <div class="endpoint-item" data-method="PUT" data-path="r/{routine}">
+                        <span class="method put">PUT</span>
+                        <span class="path">r/{routine}</span>
+                    </div>
+                    <div class="endpoint-item" data-method="GET" data-path="test/error">
+                        <span class="method get">GET</span>
+                        <span class="path">test/error</span>
+                    </div>
+                    <div class="endpoint-item" data-method="POST" data-path="rpc/{rpc}">
+                        <span class="method post">POST</span>
+                        <span class="path">rpc/{rpc}</span>
+                    </div>
+                    <div class="endpoint-item" data-method="GET" data-path="test/bigoutput">
+                        <span class="method get">GET</span>
+                        <span class="path">test/bigoutput</span>
+                    </div>
+                    <div class="endpoint-item" data-method="GET" data-path="test/gloreturn">
+                        <span class="method get">GET</span>
+                        <span class="path">test/gloreturn</span>
+                    </div>
+                    <div class="endpoint-item" data-method="POST" data-path="rpc2/{rpc}">
+                        <span class="method post">POST</span>
+                        <span class="path">rpc2/{rpc}</span>
+                    </div>
+                    <div class="endpoint-item" data-method="GET" data-path="fileman/{file}/{iens}">
+                        <span class="method get">GET</span>
+                        <span class="path">fileman/{file}/{iens}</span>
+                    </div>
+                    <div class="endpoint-item" data-method="GET" data-path="gtree/{root}">
+                        <span class="method get">GET</span>
+                        <span class="path">gtree/{root}</span>
+                    </div>
+                    <div class="endpoint-item" data-method="POST" data-path="fgcuorder">
+                        <span class="method post">POST</span>
+                        <span class="path">fgcuorder</span>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Center Panel - Request Builder -->
+            <section class="request-panel">
+                <div class="panel-header">
+                    <h2>🔧 Request Builder</h2>
+                    <button id="clearRequest" class="btn btn-small">Clear</button>
+                </div>
+                
+                <div class="request-form">
+                    <div class="form-group">
+                        <label>HTTP Method</label>
+                        <select id="httpMethod">
+                            <option value="GET">GET</option>
+                            <option value="POST">POST</option>
+                            <option value="PUT">PUT</option>
+                            <option value="DELETE">DELETE</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Endpoint Path</label>
+                        <input type="text" id="endpointPath" placeholder="/r/ROUTINE" class="full-width">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Headers</label>
+                        <div class="headers-container">
+                            <div class="header-row">
+                                <input type="text" class="header-key" placeholder="Content-Type" value="Content-Type">
+                                <input type="text" class="header-value" placeholder="application/json" value="application/json">
+                                <button class="btn-icon" onclick="removeHeaderRow(this)">❌</button>
+                            </div>
+                        </div>
+                        <button id="addHeader" class="btn btn-small">+ Add Header</button>
+                    </div>
+
+                    <div class="form-group" id="requestBodyGroup">
+                        <label>Request Body (JSON or Text)</label>
+                        <textarea id="requestBody" rows="10" placeholder='{"key": "value"}'></textarea>
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="sendRequest" class="btn btn-primary">▶️ Send Request</button>
+                        <button id="saveRequest" class="btn btn-secondary">💾 Save</button>
+                        <button id="loadRequest" class="btn btn-secondary">📁 Load</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel - Response Viewer -->
+            <section class="response-panel">
+                <div class="panel-header">
+                    <h2>📊 Response</h2>
+                    <div class="response-tabs">
+                        <button class="tab-btn active" data-tab="body">Body</button>
+                        <button class="tab-btn" data-tab="headers">Headers</button>
+                        <button class="tab-btn" data-tab="raw">Raw</button>
+                    </div>
+                </div>
+
+                <div class="response-info">
+                    <span id="statusCode" class="status-code">-</span>
+                    <span id="responseTime" class="response-time">- ms</span>
+                    <span id="responseSize" class="response-size">- bytes</span>
+                </div>
+
+                <div class="response-content">
+                    <div id="bodyTab" class="tab-content active">
+                        <pre id="responseBody">No response yet. Send a request to see results.</pre>
+                    </div>
+                    <div id="headersTab" class="tab-content">
+                        <pre id="responseHeaders">No headers yet.</pre>
+                    </div>
+                    <div id="rawTab" class="tab-content">
+                        <pre id="responseRaw">No raw response yet.</pre>
+                    </div>
+                </div>
+
+                <div class="response-actions">
+                    <button id="copyResponse" class="btn btn-small">📋 Copy</button>
+                    <button id="downloadResponse" class="btn btn-small">⬇️ Download</button>
+                    <button id="formatJson" class="btn btn-small">✨ Format JSON</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Bottom Panel - History -->
+        <section class="history-panel">
+            <div class="panel-header">
+                <h3>📜 Request History</h3>
+                <button id="clearHistory" class="btn btn-small">Clear All</button>
+            </div>
+            <div id="historyList" class="history-list">
+                <p class="empty-state">No requests yet. Start testing!</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+      // State Management
+const state = {
+    baseUrl: 'http://fhirdev.vistaplex.org:9085',
+    currentRequest: {
+        method: 'GET',
+        path: '',
+        headers: { 'Content-Type': 'application/json' },
+        body: ''
+    },
+    history: [],
+    currentResponse: null
+};
+
+// Initialize app
+document.addEventListener('DOMContentLoaded', () => {
+    initializeElements();
+    loadHistory();
+    setupEventListeners();
+    loadBaseUrl();
+});
+
+// DOM Elements
+let elements = {};
+
+function initializeElements() {
+    elements = {
+        baseUrl: document.getElementById('baseUrl'),
+        httpMethod: document.getElementById('httpMethod'),
+        endpointPath: document.getElementById('endpointPath'),
+        requestBody: document.getElementById('requestBody'),
+        requestBodyGroup: document.getElementById('requestBodyGroup'),
+        sendRequest: document.getElementById('sendRequest'),
+        testConnection: document.getElementById('testConnection'),
+        clearRequest: document.getElementById('clearRequest'),
+        addHeader: document.getElementById('addHeader'),
+        saveRequest: document.getElementById('saveRequest'),
+        loadRequest: document.getElementById('loadRequest'),
+        responseBody: document.getElementById('responseBody'),
+        responseHeaders: document.getElementById('responseHeaders'),
+        responseRaw: document.getElementById('responseRaw'),
+        statusCode: document.getElementById('statusCode'),
+        responseTime: document.getElementById('responseTime'),
+        responseSize: document.getElementById('responseSize'),
+        copyResponse: document.getElementById('copyResponse'),
+        downloadResponse: document.getElementById('downloadResponse'),
+        formatJson: document.getElementById('formatJson'),
+        historyList: document.getElementById('historyList'),
+        clearHistory: document.getElementById('clearHistory'),
+        headersContainer: document.querySelector('.headers-container')
+    };
+}
+
+// Event Listeners
+function setupEventListeners() {
+    // Endpoint selection
+    document.querySelectorAll('.endpoint-item').forEach(item => {
+        item.addEventListener('click', () => selectEndpoint(item));
+    });
+
+    // Request controls
+    elements.sendRequest.addEventListener('click', sendRequest);
+    elements.testConnection.addEventListener('click', testConnection);
+    elements.clearRequest.addEventListener('click', clearRequest);
+    elements.addHeader.addEventListener('click', addHeaderRow);
+    elements.saveRequest.addEventListener('click', saveRequest);
+    elements.loadRequest.addEventListener('click', loadRequest);
+
+    // HTTP Method change
+    elements.httpMethod.addEventListener('change', (e) => {
+        state.currentRequest.method = e.target.value;
+        toggleBodyField();
+    });
+
+    // Base URL change
+    elements.baseUrl.addEventListener('change', (e) => {
+        state.baseUrl = e.target.value;
+        saveBaseUrl();
+    });
+
+    // Response actions
+    elements.copyResponse.addEventListener('click', copyResponse);
+    elements.downloadResponse.addEventListener('click', downloadResponse);
+    elements.formatJson.addEventListener('click', formatJsonResponse);
+
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
+
+    // History
+    elements.clearHistory.addEventListener('click', clearHistory);
+}
+
+// Endpoint Selection
+function selectEndpoint(item) {
+    // Remove active class from all items
+    document.querySelectorAll('.endpoint-item').forEach(el => {
+        el.classList.remove('active');
+    });
+    
+    // Add active class to selected item
+    item.classList.add('active');
+    
+    // Set method and path
+    const method = item.dataset.method;
+    const path = item.dataset.path;
+    
+    elements.httpMethod.value = method;
+    elements.endpointPath.value = '/' + path;
+    
+    state.currentRequest.method = method;
+    state.currentRequest.path = '/' + path;
+    
+    toggleBodyField();
+    
+    // Set example body for POST/PUT
+    if (method === 'POST' || method === 'PUT') {
+        setExampleBody(path);
+    }
+}
+
+function setExampleBody(path) {
+    const examples = {
+        'r/{routine}': '// MUMPS Routine Code\nTESTROUTINE\n  WRITE "Hello from MUMPS",!\n  QUIT',
+        'rpc/{rpc}': '{\n  "params": ["param1", "param2"],\n  "context": "example"\n}',
+        'rpc2/{rpc}': '{\n  "params": ["param1", "param2"],\n  "context": "example"\n}',
+        'fgcuorder': '{\n  "orderId": "12345",\n  "patientId": "67890"\n}'
+    };
+    
+    const example = examples[path];
+    if (example) {
+        elements.requestBody.value = example;
+    }
+}
+
+function toggleBodyField() {
+    const method = elements.httpMethod.value;
+    if (method === 'POST' || method === 'PUT') {
+        elements.requestBodyGroup.style.display = 'block';
+    } else {
+        elements.requestBodyGroup.style.display = 'none';
+    }
+}
+
+// Header Management
+function addHeaderRow() {
+    const headerRow = document.createElement('div');
+    headerRow.className = 'header-row';
+    headerRow.innerHTML = `
+        <input type="text" class="header-key" placeholder="Header Name">
+        <input type="text" class="header-value" placeholder="Header Value">
+        <button class="btn-icon" onclick="removeHeaderRow(this)">❌</button>
+    `;
+    elements.headersContainer.appendChild(headerRow);
+}
+
+function removeHeaderRow(btn) {
+    const row = btn.parentElement;
+    // Don't remove if it's the last row
+    if (elements.headersContainer.children.length > 1) {
+        row.remove();
+    } else {
+        // Clear the values instead
+        row.querySelector('.header-key').value = '';
+        row.querySelector('.header-value').value = '';
+    }
+}
+
+function getHeaders() {
+    const headers = {};
+    document.querySelectorAll('.header-row').forEach(row => {
+        const key = row.querySelector('.header-key').value.trim();
+        const value = row.querySelector('.header-value').value.trim();
+        if (key && value) {
+            headers[key] = value;
+        }
+    });
+    return headers;
+}
+
+// Request Handling
+async function sendRequest() {
+    const method = elements.httpMethod.value;
+    const path = elements.endpointPath.value;
+    const body = elements.requestBody.value;
+    const headers = getHeaders();
+    
+    if (!path) {
+        showNotification('Please enter an endpoint path', 'error');
+        return;
+    }
+    
+    const url = state.baseUrl + path;
+    
+    // Show loading state
+    elements.sendRequest.disabled = true;
+    elements.sendRequest.textContent = '⏳ Sending...';
+    
+    const startTime = performance.now();
+    
+    try {
+        const options = {
+            method: method,
+            headers: headers
+        };
+        
+        if ((method === 'POST' || method === 'PUT') && body) {
+            options.body = body;
+        }
+        
+        const response = await fetch(url, options);
+        const endTime = performance.now();
+        const duration = Math.round(endTime - startTime);
+        
+        // Get response text
+        const responseText = await response.text();
+        let responseData;
+        
+        try {
+            responseData = JSON.parse(responseText);
+        } catch {
+            responseData = responseText;
+        }
+        
+        // Calculate size
+        const size = new Blob([responseText]).size;
+        
+        // Store response
+        state.currentResponse = {
+            status: response.status,
+            statusText: response.statusText,
+            headers: Object.fromEntries(response.headers.entries()),
+            data: responseData,
+            raw: responseText,
+            time: duration,
+            size: size
+        };
+        
+        // Display response
+        displayResponse();
+        
+        // Add to history
+        addToHistory({
+            method,
+            path,
+            status: response.status,
+            time: duration,
+            timestamp: new Date().toISOString()
+        });
+        
+        showNotification('Request completed successfully', 'success');
+        
+    } catch (error) {
+        state.currentResponse = {
+            status: 0,
+            statusText: 'Error',
+            headers: {},
+            data: { error: error.message },
+            raw: error.message,
+            time: Math.round(performance.now() - startTime),
+            size: 0
+        };
+        
+        displayResponse();
+        showNotification('Request failed: ' + error.message, 'error');
+    } finally {
+        elements.sendRequest.disabled = false;
+        elements.sendRequest.textContent = '▶️ Send Request';
+    }
+}
+
+async function testConnection() {
+    const url = elements.baseUrl.value;
+    elements.testConnection.disabled = true;
+    elements.testConnection.textContent = '⏳ Testing...';
+    
+    try {
+        const response = await fetch(url, { method: 'HEAD' });
+        if (response.ok || response.status < 500) {
+            showNotification('Connection successful!', 'success');
+        } else {
+            showNotification('Server returned error: ' + response.status, 'warning');
+        }
+    } catch (error) {
+        showNotification('Connection failed: ' + error.message, 'error');
+    } finally {
+        elements.testConnection.disabled = false;
+        elements.testConnection.textContent = 'Test Connection';
+    }
+}
+
+// Response Display
+function displayResponse() {
+    if (!state.currentResponse) return;
+    
+    const { status, statusText, headers, data, raw, time, size } = state.currentResponse;
+    
+    // Status code
+    elements.statusCode.textContent = `${status} ${statusText}`;
+    elements.statusCode.className = 'status-code ' + (status >= 200 && status < 300 ? 'success' : 'error');
+    
+    // Time and size
+    elements.responseTime.textContent = `${time} ms`;
+    elements.responseSize.textContent = formatBytes(size);
+    
+    // Body
+    if (typeof data === 'object') {
+        elements.responseBody.textContent = JSON.stringify(data, null, 2);
+    } else {
+        elements.responseBody.textContent = data;
+    }
+    
+    // Headers
+    elements.responseHeaders.textContent = JSON.stringify(headers, null, 2);
+    
+    // Raw
+    elements.responseRaw.textContent = raw;
+}
+
+function switchTab(tabName) {
+    // Update tab buttons
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabName);
+    });
+    
+    // Update tab content
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    document.getElementById(tabName + 'Tab').classList.add('active');
+}
+
+// Response Actions
+function copyResponse() {
+    const activeTab = document.querySelector('.tab-content.active pre');
+    if (activeTab) {
+        navigator.clipboard.writeText(activeTab.textContent)
+            .then(() => showNotification('Copied to clipboard!', 'success'))
+            .catch(() => showNotification('Failed to copy', 'error'));
+    }
+}
+
+function downloadResponse() {
+    if (!state.currentResponse) return;
+    
+    const blob = new Blob([state.currentResponse.raw], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `response-${Date.now()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    showNotification('Response downloaded', 'success');
+}
+
+function formatJsonResponse() {
+    try {
+        const activeTab = document.querySelector('.tab-content.active pre');
+        if (activeTab) {
+            const json = JSON.parse(activeTab.textContent);
+            activeTab.textContent = JSON.stringify(json, null, 2);
+            showNotification('JSON formatted', 'success');
+        }
+    } catch {
+        showNotification('Not valid JSON', 'error');
+    }
+}
+
+// History Management
+function addToHistory(item) {
+    state.history.unshift(item);
+    if (state.history.length > 50) {
+        state.history = state.history.slice(0, 50);
+    }
+    saveHistory();
+    renderHistory();
+}
+
+function renderHistory() {
+    if (state.history.length === 0) {
+        elements.historyList.innerHTML = '<p class="empty-state">No requests yet. Start testing!</p>';
+        return;
+    }
+    
+    elements.historyList.innerHTML = state.history.map((item, index) => `
+        <div class="history-item" onclick="loadFromHistory(${index})">
+            <div class="history-item-info">
+                <span class="method ${item.method.toLowerCase()}">${item.method}</span>
+                <span class="path">${item.path}</span>
+                <span class="status-code ${item.status >= 200 && item.status < 300 ? 'success' : 'error'}">${item.status}</span>
+                <span class="response-time">${item.time} ms</span>
+            </div>
+            <div class="history-item-actions">
+                <span class="history-item-time">${formatTimestamp(item.timestamp)}</span>
+                <button class="btn-icon" onclick="event.stopPropagation(); deleteFromHistory(${index})">🗑️</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function loadFromHistory(index) {
+    const item = state.history[index];
+    elements.httpMethod.value = item.method;
+    elements.endpointPath.value = item.path;
+    state.currentRequest.method = item.method;
+    state.currentRequest.path = item.path;
+    toggleBodyField();
+}
+
+function deleteFromHistory(index) {
+    state.history.splice(index, 1);
+    saveHistory();
+    renderHistory();
+}
+
+function clearHistory() {
+    if (confirm('Clear all history?')) {
+        state.history = [];
+        saveHistory();
+        renderHistory();
+        showNotification('History cleared', 'success');
+    }
+}
+
+// Local Storage
+function saveHistory() {
+    localStorage.setItem('mumps-rest-history', JSON.stringify(state.history));
+}
+
+function loadHistory() {
+    const saved = localStorage.getItem('mumps-rest-history');
+    if (saved) {
+        state.history = JSON.parse(saved);
+        renderHistory();
+    }
+}
+
+function saveBaseUrl() {
+    localStorage.setItem('mumps-rest-baseurl', state.baseUrl);
+}
+
+function loadBaseUrl() {
+    const saved = localStorage.getItem('mumps-rest-baseurl');
+    if (saved) {
+        state.baseUrl = saved;
+        elements.baseUrl.value = saved;
+    }
+}
+
+// Request Save/Load
+function saveRequest() {
+    const request = {
+        method: elements.httpMethod.value,
+        path: elements.endpointPath.value,
+        headers: getHeaders(),
+        body: elements.requestBody.value
+    };
+    
+    const name = prompt('Enter a name for this request:');
+    if (name) {
+        const saved = JSON.parse(localStorage.getItem('mumps-rest-saved') || '{}');
+        saved[name] = request;
+        localStorage.setItem('mumps-rest-saved', JSON.stringify(saved));
+        showNotification(`Request saved as "${name}"`, 'success');
+    }
+}
+
+function loadRequest() {
+    const saved = JSON.parse(localStorage.getItem('mumps-rest-saved') || '{}');
+    const names = Object.keys(saved);
+    
+    if (names.length === 0) {
+        showNotification('No saved requests', 'warning');
+        return;
+    }
+    
+    const name = prompt('Enter request name:\n\n' + names.join('\n'));
+    if (name && saved[name]) {
+        const request = saved[name];
+        elements.httpMethod.value = request.method;
+        elements.endpointPath.value = request.path;
+        elements.requestBody.value = request.body || '';
+        
+        // Load headers
+        elements.headersContainer.innerHTML = '';
+        for (const [key, value] of Object.entries(request.headers)) {
+            const row = document.createElement('div');
+            row.className = 'header-row';
+            row.innerHTML = `
+                <input type="text" class="header-key" value="${key}">
+                <input type="text" class="header-value" value="${value}">
+                <button class="btn-icon" onclick="removeHeaderRow(this)">❌</button>
+            `;
+            elements.headersContainer.appendChild(row);
+        }
+        
+        toggleBodyField();
+        showNotification(`Request "${name}" loaded`, 'success');
+    }
+}
+
+function clearRequest() {
+    elements.endpointPath.value = '';
+    elements.requestBody.value = '';
+    document.querySelectorAll('.endpoint-item').forEach(el => {
+        el.classList.remove('active');
+    });
+}
+
+// Utility Functions
+function formatBytes(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+}
+
+function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diff = now - date;
+    
+    if (diff < 60000) return 'Just now';
+    if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+    if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+    return date.toLocaleDateString();
+}
+
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        background: ${type === 'success' ? '#4ec9b0' : type === 'error' ? '#f48771' : '#dcdcaa'};
+        color: #000;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 500;
+        z-index: 10000;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        animation: slideIn 0.3s ease;
+    `;
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => notification.remove(), 300);
+    }, 3000);
+}
+
+// Add animation styles
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+
+    </script>
+</body>
+</html>
