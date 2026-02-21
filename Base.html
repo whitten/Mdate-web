@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Date Modifier App</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding: 50px; background-color: #f4f4f9; }
+        .card { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 350px; }
+        .field { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: bold; color: #333; }
+        input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        .output { margin-top: 1rem; padding: 10px; background: #e7f3ff; border-radius: 4px; font-size: 0.9rem; min-height: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="field">
+        <label for="baseDate">Base Date/Time</label>
+        <input type="text" id="baseDate" placeholder="e.g. 2026-02-20 12:00">
+    </div>
+
+    <div class="field">
+        <label for="modifier">Modifier</label>
+        <input type="text" id="modifier" placeholder="e.g. +2 hours">
+    </div>
+
+    <div class="field">
+        <label for="choice">Active</label>
+        <select id="choice">
+            <option value=""></option>
+            <option value="yes">Yes</option>
+            <option value="no">No</option>
+        </select>
+    </div>
+
+    <div class="output" id="display">
+        Waiting for input...
+    </div>
+</div>
+
+<script>
+    const baseInput = document.getElementById('baseDate');
+    const modInput = document.getElementById('modifier');
+    const choiceInput = document.getElementById('choice');
+    const display = document.getElementById('display');
+
+    function updateDisplay() {
+        const base = baseInput.value || "(empty)";
+        const mod = modInput.value || "(empty)";
+        const choice = choiceInput.value || "(none)";
+        
+        display.innerHTML = `<strong>Current State:</strong><br>
+                             Base: ${base}<br>
+                             Mod: ${mod}<br>
+                             Choice: ${choice}`;
+    }
+
+    [baseInput, modInput, choiceInput].forEach(el => {
+        el.addEventListener('input', updateDisplay);
+    });
+</script>
+
+</body>
+</html>
